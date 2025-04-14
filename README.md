@@ -13,10 +13,20 @@ The project explores how varying multiple k-mer sizes affects genome recovery us
 └── Scripts/
     └── bash/
         ├── runMe_KmersTesting.sh
+        ├── runMe_metaQuast.sh
+        ├── runMe_metaQuast_gs.sh
         └── sbatchMe_download_dataset.sh
 ```
 
 ### Directory and File Descriptions
+
+- **README.md**: This file. Provides an overview and instructions for the project.
+- **Scripts/**: Contains all scripts used in the project.
+  - **bash/**: Contains Bash scripts for running various parts of the pipeline.
+    - **runMe_KmersTesting.sh**: Script to run assemblies with different k-mer combinations.
+    - **runMe_metaQuast.sh**: Script to run metaQUAST on the assemblies.
+    - **runMe_metaQuast_gs.sh**: Script to run metaQUAST on the gold standard references.
+    - **sbatchMe_download_dataset.sh**: SLURM batch script for downloading the dataset.
 
 ### Prerequisites
 
