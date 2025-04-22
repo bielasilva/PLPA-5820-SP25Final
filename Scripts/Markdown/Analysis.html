@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Metagenomics K-mer Testing</title>
+
+<script src="Analysis_files/header-attrs-2.28/header-attrs.js"></script>
+<script src="Analysis_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Analysis_files/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="Analysis_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Analysis_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Analysis_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="Analysis_files/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="Analysis_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="Analysis_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="Analysis_files/navigation-1.1/tabsets.js"></script>
+<script src="Analysis_files/navigation-1.1/codefolding.js"></script>
+<link href="Analysis_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="Analysis_files/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Metagenomics K-mer Testing</h1>
+
+</div>
+
+
+<div id="import-libraries" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> Import Libraries</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># Data manipulation</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(ggpubr)       <span class="co"># ggplot2 extensions</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(egg)          <span class="co"># ggplot2 extensions </span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer) <span class="co"># Color palettes</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(sensitivity)  <span class="co"># Sensitivity analysis</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(lme4)         <span class="co"># Linear mixed-effects models</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(pls)          <span class="co"># Partial least squares regression</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(loadings)     <span class="co"># Loadings for PLS</span></span></code></pre></div>
+</div>
+<div id="define-functions" class="section level2" number="2">
+<h2><span class="header-section-number">2</span> Define functions</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Define custom negation for `%in%`</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="st">`</span><span class="at">%notin%</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">Negate</span>(<span class="st">`</span><span class="at">%in%</span><span class="st">`</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Define function to calculate 95%CI</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>CI95 <span class="ot">&lt;-</span> <span class="cf">function</span>(stde,sample.n){</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  degrees.freedom <span class="ot">&lt;-</span> sample.n <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  t.score <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p=</span>alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">df=</span>degrees.freedom,<span class="at">lower.tail=</span>F)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  CI <span class="ot">&lt;-</span> t.score <span class="sc">*</span> stde</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="fu">return</span>(CI)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>}</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># Define function to get colors</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>get_colors <span class="ot">&lt;-</span> <span class="cf">function</span>(dataDf) {</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  <span class="co"># Get variable names</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>  vars <span class="ot">&lt;-</span> <span class="fu">unique</span>(dataDf<span class="sc">$</span>Variables)</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>  </span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="co"># Get number of variables</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  N_vars <span class="ot">&lt;-</span> <span class="fu">length</span>(vars)</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  </span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="co"># Set the color palette</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>  colors <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> N_vars, <span class="at">name =</span> <span class="st">&quot;Dark2&quot;</span>),</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>    <span class="at">Variables =</span> vars</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>  )</span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a>  </span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>  <span class="fu">return</span>(colors)</span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a>}</span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co"># Define a Function to Format Data</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>format_data <span class="ot">&lt;-</span> <span class="cf">function</span>(dataDf, metric){</span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>  <span class="co"># Prepare Data for Sensitivity Analysis</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>  dataDf_filtered <span class="ot">&lt;-</span> dataDf <span class="sc">%&gt;%</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>    <span class="fu">filter</span>(Metric <span class="sc">==</span> metric) <span class="sc">%&gt;%</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>Metric) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    <span class="fu">unite</span>(<span class="st">&quot;KComb&quot;</span>, Kmer1, Kmer2, Kmer3, Kmer4, <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>, <span class="at">remove =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>  </span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a>  <span class="co"># Separate Gold Standard and Compute Differences</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a>  dataDf_gs <span class="ot">&lt;-</span> dataDf_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a>    <span class="fu">filter</span>(KComb<span class="sc">==</span><span class="st">&quot;GS_GS_GS_GS&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a>    <span class="fu">select</span>(Sample, Value) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">GS=</span>Value)</span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a>  </span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a>  dataDf_exp <span class="ot">&lt;-</span> dataDf_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a>    <span class="fu">filter</span>(KComb<span class="sc">!=</span><span class="st">&quot;GS_GS_GS_GS&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a>    <span class="fu">left_join</span>(dataDf_gs, <span class="at">by=</span><span class="st">&quot;Sample&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Diff =</span> Value <span class="sc">-</span> GS)</span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>  </span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>  <span class="fu">return</span>(dataDf_exp)</span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>}</span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co"># Define a Function to Perform Sensitivity Analysis</span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>analyze_sensitivity <span class="ot">&lt;-</span> <span class="cf">function</span>(dataDf, metric) {</span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>  </span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>  <span class="co"># Prepare Data</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>  data_exp <span class="ot">&lt;-</span> <span class="fu">format_data</span>(dataDf, metric)</span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a>  </span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a>  <span class="co"># Perform Sensitivity Analysis</span></span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a>  srcOriginal <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a>  srcError <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a>  srcBias <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a>  </span>
+<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a>  <span class="cf">for</span> (sample <span class="cf">in</span> <span class="fu">unique</span>(dataDf<span class="sc">$</span>Sample)){</span>
+<span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a>    sample_df <span class="ot">&lt;-</span> data_exp <span class="sc">%&gt;%</span></span>
+<span id="cb2-64"><a href="#cb2-64" tabindex="-1"></a>      <span class="fu">filter</span>(Sample <span class="sc">==</span> sample)</span>
+<span id="cb2-65"><a href="#cb2-65" tabindex="-1"></a>    </span>
+<span id="cb2-66"><a href="#cb2-66" tabindex="-1"></a>    predictors <span class="ot">&lt;-</span> sample_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(Kmer1, Kmer2, Kmer3, Kmer4) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-67"><a href="#cb2-67" tabindex="-1"></a>                            <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric))</span>
+<span id="cb2-68"><a href="#cb2-68" tabindex="-1"></a>    </span>
+<span id="cb2-69"><a href="#cb2-69" tabindex="-1"></a>    targets <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(sample_df<span class="sc">$</span>Value)</span>
+<span id="cb2-70"><a href="#cb2-70" tabindex="-1"></a>    </span>
+<span id="cb2-71"><a href="#cb2-71" tabindex="-1"></a>    srcSample <span class="ot">&lt;-</span> <span class="fu">src</span>(predictors, targets, <span class="at">nboot =</span> <span class="dv">1000</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span>
+<span id="cb2-72"><a href="#cb2-72" tabindex="-1"></a>    srcSample_original <span class="ot">&lt;-</span> <span class="fu">c</span>(sample,<span class="fu">as.array</span>(<span class="fu">t</span>(srcSample<span class="sc">$</span>SRC))[<span class="dv">1</span>,])</span>
+<span id="cb2-73"><a href="#cb2-73" tabindex="-1"></a>    srcSample_sterror <span class="ot">&lt;-</span> <span class="fu">c</span>(sample,<span class="fu">as.array</span>(<span class="fu">t</span>(srcSample<span class="sc">$</span>SRC))[<span class="dv">3</span>,])</span>
+<span id="cb2-74"><a href="#cb2-74" tabindex="-1"></a>    srcSample_bias <span class="ot">&lt;-</span> <span class="fu">c</span>(sample,<span class="fu">as.array</span>(<span class="fu">t</span>(srcSample<span class="sc">$</span>SRC))[<span class="dv">2</span>,])</span>
+<span id="cb2-75"><a href="#cb2-75" tabindex="-1"></a>    </span>
+<span id="cb2-76"><a href="#cb2-76" tabindex="-1"></a>    srcOriginal <span class="ot">&lt;-</span> <span class="fu">rbind</span>(srcOriginal, srcSample_original)</span>
+<span id="cb2-77"><a href="#cb2-77" tabindex="-1"></a>    srcError <span class="ot">&lt;-</span> <span class="fu">rbind</span>(srcError, srcSample_sterror)</span>
+<span id="cb2-78"><a href="#cb2-78" tabindex="-1"></a>    srcBias <span class="ot">&lt;-</span> <span class="fu">rbind</span>(srcBias, srcSample_bias)</span>
+<span id="cb2-79"><a href="#cb2-79" tabindex="-1"></a>    </span>
+<span id="cb2-80"><a href="#cb2-80" tabindex="-1"></a>  }</span>
+<span id="cb2-81"><a href="#cb2-81" tabindex="-1"></a>  </span>
+<span id="cb2-82"><a href="#cb2-82" tabindex="-1"></a>  srcOriginal <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(srcOriginal)</span>
+<span id="cb2-83"><a href="#cb2-83" tabindex="-1"></a>  srcError <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(srcError)</span>
+<span id="cb2-84"><a href="#cb2-84" tabindex="-1"></a>  srcBias <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(srcBias)</span>
+<span id="cb2-85"><a href="#cb2-85" tabindex="-1"></a>  </span>
+<span id="cb2-86"><a href="#cb2-86" tabindex="-1"></a>  <span class="fu">colnames</span>(srcOriginal)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;id&quot;</span></span>
+<span id="cb2-87"><a href="#cb2-87" tabindex="-1"></a>  <span class="fu">colnames</span>(srcError)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;id&quot;</span></span>
+<span id="cb2-88"><a href="#cb2-88" tabindex="-1"></a>  <span class="fu">colnames</span>(srcBias)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;id&quot;</span></span>
+<span id="cb2-89"><a href="#cb2-89" tabindex="-1"></a>  </span>
+<span id="cb2-90"><a href="#cb2-90" tabindex="-1"></a>  </span>
+<span id="cb2-91"><a href="#cb2-91" tabindex="-1"></a>  </span>
+<span id="cb2-92"><a href="#cb2-92" tabindex="-1"></a>  </span>
+<span id="cb2-93"><a href="#cb2-93" tabindex="-1"></a>  <span class="fu">return</span>(srcResult <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">srcOriginal =</span> srcOriginal,</span>
+<span id="cb2-94"><a href="#cb2-94" tabindex="-1"></a>                           <span class="at">srcError =</span> srcError,</span>
+<span id="cb2-95"><a href="#cb2-95" tabindex="-1"></a>                           <span class="at">srcBias =</span> srcBias))</span>
+<span id="cb2-96"><a href="#cb2-96" tabindex="-1"></a>}</span>
+<span id="cb2-97"><a href="#cb2-97" tabindex="-1"></a></span>
+<span id="cb2-98"><a href="#cb2-98" tabindex="-1"></a><span class="co"># Define a Plotting Function</span></span>
+<span id="cb2-99"><a href="#cb2-99" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="cf">function</span>(dataDf,title,y_label,<span class="at">colorsDf =</span> <span class="fu">get_colors</span>(dataDf)) {</span>
+<span id="cb2-100"><a href="#cb2-100" tabindex="-1"></a>  </span>
+<span id="cb2-101"><a href="#cb2-101" tabindex="-1"></a>  <span class="co"># Get the number of unique ids</span></span>
+<span id="cb2-102"><a href="#cb2-102" tabindex="-1"></a>  N_ids <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(dataDf<span class="sc">$</span>id))</span>
+<span id="cb2-103"><a href="#cb2-103" tabindex="-1"></a>  </span>
+<span id="cb2-104"><a href="#cb2-104" tabindex="-1"></a>  <span class="co"># Gather the data</span></span>
+<span id="cb2-105"><a href="#cb2-105" tabindex="-1"></a>  dataDf <span class="ot">&lt;-</span> dataDf <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="at">key =</span> <span class="st">&quot;Variables&quot;</span>, <span class="at">value =</span> <span class="st">&quot;SRC&quot;</span>, <span class="sc">-</span>id) <span class="sc">%&gt;%</span></span>
+<span id="cb2-106"><a href="#cb2-106" tabindex="-1"></a>               <span class="fu">mutate</span>(<span class="at">Variables =</span> <span class="fu">as.factor</span>(Variables),</span>
+<span id="cb2-107"><a href="#cb2-107" tabindex="-1"></a>                      <span class="at">SRC =</span> <span class="fu">as.numeric</span>(SRC)) </span>
+<span id="cb2-108"><a href="#cb2-108" tabindex="-1"></a>  </span>
+<span id="cb2-109"><a href="#cb2-109" tabindex="-1"></a>  <span class="co"># Summarize the data</span></span>
+<span id="cb2-110"><a href="#cb2-110" tabindex="-1"></a>  dataDf_summary <span class="ot">&lt;-</span> dataDf <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Variables) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-111"><a href="#cb2-111" tabindex="-1"></a>                      <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(SRC), <span class="at">sd =</span> <span class="fu">sd</span>(SRC),</span>
+<span id="cb2-112"><a href="#cb2-112" tabindex="-1"></a>                            <span class="at">se=</span>sd<span class="sc">/</span><span class="fu">sqrt</span>(N_ids), <span class="at">ci=</span><span class="fu">CI95</span>(se,N_ids),</span>
+<span id="cb2-113"><a href="#cb2-113" tabindex="-1"></a>                      <span class="at">ci2 =</span> <span class="fu">list</span>(<span class="fu">enframe</span>(Hmisc<span class="sc">::</span><span class="fu">smean.cl.boot</span>(SRC))),</span>
+<span id="cb2-114"><a href="#cb2-114" tabindex="-1"></a>                                  <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-115"><a href="#cb2-115" tabindex="-1"></a>                      <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(ci2)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-116"><a href="#cb2-116" tabindex="-1"></a>                      <span class="fu">spread</span>(name, value) <span class="sc">%&gt;%</span></span>
+<span id="cb2-117"><a href="#cb2-117" tabindex="-1"></a>                      <span class="fu">select</span>(<span class="sc">-</span>Mean) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-118"><a href="#cb2-118" tabindex="-1"></a>                      <span class="fu">rename</span>(<span class="at">ci_boot_lower =</span> Lower, <span class="at">ci_boot_upper =</span> Upper)</span>
+<span id="cb2-119"><a href="#cb2-119" tabindex="-1"></a>  </span>
+<span id="cb2-120"><a href="#cb2-120" tabindex="-1"></a>  <span class="co"># Join the data</span></span>
+<span id="cb2-121"><a href="#cb2-121" tabindex="-1"></a>  dataDf <span class="ot">&lt;-</span> dataDf <span class="sc">%&gt;%</span> </span>
+<span id="cb2-122"><a href="#cb2-122" tabindex="-1"></a>              <span class="fu">left_join</span>(dataDf_summary, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Variables&quot;</span> <span class="ot">=</span> <span class="st">&quot;Variables&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-123"><a href="#cb2-123" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">mean =</span> <span class="fu">as.numeric</span>(mean),</span>
+<span id="cb2-124"><a href="#cb2-124" tabindex="-1"></a>                     <span class="at">sd =</span> <span class="fu">as.numeric</span>(sd),</span>
+<span id="cb2-125"><a href="#cb2-125" tabindex="-1"></a>                     <span class="at">se =</span> <span class="fu">as.numeric</span>(se)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-126"><a href="#cb2-126" tabindex="-1"></a>              <span class="fu">left_join</span>(colorsDf, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Variables&quot;</span> <span class="ot">=</span> <span class="st">&quot;Variables&quot;</span>))</span>
+<span id="cb2-127"><a href="#cb2-127" tabindex="-1"></a>  </span>
+<span id="cb2-128"><a href="#cb2-128" tabindex="-1"></a>  <span class="co"># Set Plotting Parameters</span></span>
+<span id="cb2-129"><a href="#cb2-129" tabindex="-1"></a>  alph <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb2-130"><a href="#cb2-130" tabindex="-1"></a>  pt.size <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb2-131"><a href="#cb2-131" tabindex="-1"></a>  pos.jitter <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb2-132"><a href="#cb2-132" tabindex="-1"></a>  mean.size <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb2-133"><a href="#cb2-133" tabindex="-1"></a>  mean.shape <span class="ot">&lt;-</span> <span class="dv">18</span></span>
+<span id="cb2-134"><a href="#cb2-134" tabindex="-1"></a>  cex <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb2-135"><a href="#cb2-135" tabindex="-1"></a>  </span>
+<span id="cb2-136"><a href="#cb2-136" tabindex="-1"></a>  <span class="fu">ggplot</span>(dataDf, <span class="fu">aes</span>(<span class="at">x =</span> Variables, <span class="at">y =</span> SRC)) <span class="sc">+</span></span>
+<span id="cb2-137"><a href="#cb2-137" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(pos.jitter), <span class="at">col =</span> dataDf<span class="sc">$</span>color,</span>
+<span id="cb2-138"><a href="#cb2-138" tabindex="-1"></a>               <span class="at">alpha =</span> alph, <span class="at">size =</span> pt.size) <span class="sc">+</span></span>
+<span id="cb2-139"><a href="#cb2-139" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean), <span class="at">col =</span> dataDf<span class="sc">$</span>color,</span>
+<span id="cb2-140"><a href="#cb2-140" tabindex="-1"></a>               <span class="at">size =</span> mean.size, <span class="at">shape =</span> mean.shape) <span class="sc">+</span></span>
+<span id="cb2-141"><a href="#cb2-141" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>ci_boot_lower, <span class="at">ymax=</span>ci_boot_upper),</span>
+<span id="cb2-142"><a href="#cb2-142" tabindex="-1"></a>                  <span class="at">width=</span><span class="fl">0.1</span>, <span class="at">col =</span> dataDf<span class="sc">$</span>color ) <span class="sc">+</span></span>
+<span id="cb2-143"><a href="#cb2-143" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> title, <span class="at">x =</span> <span class="fu">element_blank</span>(), <span class="at">y =</span> y_label) <span class="sc">+</span></span>
+<span id="cb2-144"><a href="#cb2-144" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb2-145"><a href="#cb2-145" tabindex="-1"></a>          <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2-146"><a href="#cb2-146" tabindex="-1"></a>    <span class="fu">theme_pubclean</span>()</span>
+<span id="cb2-147"><a href="#cb2-147" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="load-data" class="section level2" number="3">
+<h2><span class="header-section-number">3</span> Load Data</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Set Working Directory</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>result_tsv <span class="ot">&lt;-</span> <span class="st">&quot;../../Results/Metaquast_summary.tsv&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># Load Data</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(result_tsv, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>            <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Metric,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                         <span class="at">names_to =</span> <span class="st">&quot;Sample&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>                         <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>            <span class="fu">separate</span>(Sample, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;Sample&quot;</span>, <span class="st">&quot;Kmers&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>            <span class="fu">separate</span>(Kmers,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>                     <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;Kmer1&quot;</span>, <span class="st">&quot;Kmer2&quot;</span>, <span class="st">&quot;Kmer3&quot;</span>, <span class="st">&quot;Kmer4&quot;</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>                     <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>            <span class="fu">mutate</span>(<span class="at">Kmer1 =</span> <span class="fu">str_replace</span>(Kmer1, <span class="st">&quot;k&quot;</span>, <span class="st">&quot;&quot;</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>                   <span class="at">Sample =</span> <span class="fu">str_replace</span>(Sample, <span class="st">&quot;S&quot;</span>, <span class="st">&quot;&quot;</span>))</span></code></pre></div>
+</div>
+<div id="sensitivity-analysis" class="section level2" number="4">
+<h2><span class="header-section-number">4</span> Sensitivity
+Analysis</h2>
+<div id="total-length" class="section level3" number="4.1">
+<h3><span class="header-section-number">4.1</span> Total Length</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>src_TL <span class="ot">&lt;-</span> <span class="fu">analyze_sensitivity</span>(data, <span class="st">&quot;Total length&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># Plot Original, Bias, and Error</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">annotate_figure</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">ggarrange</span>(<span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">1</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_TL<span class="sc">$</span>srcOriginal, <span class="st">&quot;Original SRC&quot;</span>, <span class="st">&quot;SRC&quot;</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_TL<span class="sc">$</span>srcBias, <span class="st">&quot;Bias SRC&quot;</span>, <span class="st">&quot;Bias&quot;</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_TL<span class="sc">$</span>srcError, <span class="st">&quot;Std Error for SRC&quot;</span>, <span class="st">&quot;Std Err&quot;</span>)),</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">&quot;Total length&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>                    <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">size =</span> <span class="dv">14</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="../../Results/Analysis_figures/sensitivity_total_length-1.png" alt="Sensitivity analysis for Total Length metric. Bars represent the 95% confidence interval with boostrap for the mean." width="100%" />
+<p class="caption">
+Sensitivity analysis for Total Length metric. Bars represent the 95%
+confidence interval with boostrap for the mean.
+</p>
+</div>
+</div>
+<div id="n50" class="section level3" number="4.2">
+<h3><span class="header-section-number">4.2</span> N50</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>src_N50 <span class="ot">&lt;-</span> <span class="fu">analyze_sensitivity</span>(data, <span class="st">&quot;N50&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co"># Plot Original, Bias, and Error</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="fu">annotate_figure</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">ggarrange</span>(<span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">1</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_N50<span class="sc">$</span>srcOriginal, <span class="st">&quot;Original SRC&quot;</span>, <span class="st">&quot;SRC&quot;</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_N50<span class="sc">$</span>srcBias, <span class="st">&quot;Bias SRC&quot;</span>, <span class="st">&quot;Bias&quot;</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_N50<span class="sc">$</span>srcError, <span class="st">&quot;Std Error for SRC&quot;</span>, <span class="st">&quot;Std Err&quot;</span>)),</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">&quot;N50&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>                    <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">size =</span> <span class="dv">14</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="../../Results/Analysis_figures/sensitivity_N50-1.png" alt="Sensitivity analysis for N50 metric. Bars represent the 95% confidence interval with boostrap for the mean." width="100%" />
+<p class="caption">
+Sensitivity analysis for N50 metric. Bars represent the 95% confidence
+interval with boostrap for the mean.
+</p>
+</div>
+</div>
+<div id="gc-content" class="section level3" number="4.3">
+<h3><span class="header-section-number">4.3</span> GC Content</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>src_gc <span class="ot">&lt;-</span> <span class="fu">analyze_sensitivity</span>(data, <span class="st">&quot;GC (%)&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co"># Plot Original, Bias, and Error</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">annotate_figure</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">ggarrange</span>(<span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">1</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_gc<span class="sc">$</span>srcOriginal, <span class="st">&quot;Original SRC&quot;</span>, <span class="st">&quot;SRC&quot;</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_gc<span class="sc">$</span>srcBias, <span class="st">&quot;Bias SRC&quot;</span>, <span class="st">&quot;Bias&quot;</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_gc<span class="sc">$</span>srcError, <span class="st">&quot;Std Error for SRC&quot;</span>, <span class="st">&quot;Std Err&quot;</span>)),</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">&quot;GC Content&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>                    <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">size =</span> <span class="dv">14</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="../../Results/Analysis_figures/sensitivity_gc_content-1.png" alt="Sensitivity analysis for GC Content metric. Bars represent the 95% confidence interval with bootstrap for the mean." width="100%" />
+<p class="caption">
+Sensitivity analysis for GC Content metric. Bars represent the 95%
+confidence interval with bootstrap for the mean.
+</p>
+</div>
+</div>
+<div id="number-of-contigs" class="section level3" number="4.4">
+<h3><span class="header-section-number">4.4</span> Number of
+contigs</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>src_contig <span class="ot">&lt;-</span> <span class="fu">analyze_sensitivity</span>(data, <span class="st">&quot;# contigs&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co"># Plot Original, Bias, and Error</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">annotate_figure</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">ggarrange</span>(<span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">1</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_contig<span class="sc">$</span>srcOriginal, <span class="st">&quot;Original SRC&quot;</span>, <span class="st">&quot;SRC&quot;</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_contig<span class="sc">$</span>srcBias, <span class="st">&quot;Bias SRC&quot;</span>, <span class="st">&quot;Bias&quot;</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>            <span class="fu">plot_data</span>(src_contig<span class="sc">$</span>srcError, <span class="st">&quot;Std Error for SRC&quot;</span>, <span class="st">&quot;Std Err&quot;</span>)),</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">&quot;Number of Contigs&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>                    <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">size =</span> <span class="dv">14</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="../../Results/Analysis_figures/sensitivity_contigs-1.png" alt="Sensitivity analysis for Number of Contigs metric. Bars represent the 95% confidence interval with bootstrap for the mean." width="100%" />
+<p class="caption">
+Sensitivity analysis for Number of Contigs metric. Bars represent the
+95% confidence interval with bootstrap for the mean.
+</p>
+</div>
+</div>
+<div id="unified-sensitivity-analysis" class="section level3"
+number="4.5">
+<h3><span class="header-section-number">4.5</span> Unified Sensitivity
+Analysis</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>srcUnified <span class="ot">&lt;-</span> <span class="fu">mutate</span>(<span class="fu">pivot_longer</span>(src_TL<span class="sc">$</span>srcOriginal, <span class="at">cols =</span> <span class="sc">!</span>id,</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>                                  <span class="at">names_to =</span> <span class="st">&quot;Variables&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;SRC&quot;</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>                     <span class="at">Metric =</span> <span class="st">&quot;Total Length&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">mutate</span>(<span class="fu">pivot_longer</span>(src_N50<span class="sc">$</span>srcOriginal, <span class="at">cols =</span> <span class="sc">!</span>id,</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                                <span class="at">names_to =</span> <span class="st">&quot;Variables&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;SRC&quot;</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>                   <span class="at">Metric =</span> <span class="st">&quot;N50&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">mutate</span>(<span class="fu">pivot_longer</span>(src_gc<span class="sc">$</span>srcOriginal, <span class="at">cols =</span> <span class="sc">!</span>id,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>                                <span class="at">names_to =</span> <span class="st">&quot;Variables&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;SRC&quot;</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>                   <span class="at">Metric =</span> <span class="st">&quot;GC Content&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">mutate</span>(<span class="fu">pivot_longer</span>(src_contig<span class="sc">$</span>srcOriginal, <span class="at">cols =</span> <span class="sc">!</span>id,</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>                                <span class="at">names_to =</span> <span class="st">&quot;Variables&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;SRC&quot;</span>), </span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>                   <span class="at">Metric =</span> <span class="st">&quot;Number of Contigs&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Variables =</span> <span class="fu">as.factor</span>(Variables), </span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>         <span class="at">Metric =</span> <span class="fu">factor</span>(Metric, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">&quot;Total Length&quot;</span>, <span class="st">&quot;Number of Contigs&quot;</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>                                          <span class="st">&quot;N50&quot;</span>,<span class="st">&quot;GC Content&quot;</span>)), </span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>         <span class="at">SRC =</span> <span class="fu">as.numeric</span>(SRC)) </span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co"># Get the number of unique ids</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>N_ids <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(srcUnified<span class="sc">$</span>id))</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co"># Summarize the data</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>srcUnified_summary <span class="ot">&lt;-</span> srcUnified <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Variables, Metric) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>                      <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(SRC), <span class="at">sd =</span> <span class="fu">sd</span>(SRC),</span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>                                <span class="at">se=</span>sd<span class="sc">/</span><span class="fu">sqrt</span>(N_ids), <span class="at">ci=</span><span class="fu">CI95</span>(se,N_ids),</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>                                <span class="at">ci2 =</span> <span class="fu">list</span>(<span class="fu">enframe</span>(Hmisc<span class="sc">::</span><span class="fu">smean.cl.boot</span>(SRC))),</span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a>                                  <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>                      <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(ci2)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>                      <span class="fu">spread</span>(name, value) <span class="sc">%&gt;%</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a>                      <span class="fu">select</span>(<span class="sc">-</span>Mean) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a>                      <span class="fu">rename</span>(<span class="at">ci_boot_lower =</span> Lower, <span class="at">ci_boot_upper =</span> Upper)</span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co"># Join the data</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a>dataDf <span class="ot">&lt;-</span> srcUnified <span class="sc">%&gt;%</span> </span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a>            <span class="fu">left_join</span>(srcUnified_summary, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Variables&quot;</span>, <span class="st">&quot;Metric&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a>            <span class="fu">mutate</span>(<span class="at">mean =</span> <span class="fu">as.numeric</span>(mean),</span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a>                   <span class="at">sd =</span> <span class="fu">as.numeric</span>(sd),</span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a>                   <span class="at">se =</span> <span class="fu">as.numeric</span>(se)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a>            <span class="fu">left_join</span>(<span class="fu">get_colors</span>(srcUnified), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Variables&quot;</span>))</span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co"># Set Plotting Parameters</span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a>alph <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a>pt.size <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a>pos.jitter <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a>mean.size <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a>mean.shape <span class="ot">&lt;-</span> <span class="dv">18</span></span>
+<span id="cb8-47"><a href="#cb8-47" tabindex="-1"></a>cex <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb8-48"><a href="#cb8-48" tabindex="-1"></a></span>
+<span id="cb8-49"><a href="#cb8-49" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dataDf, <span class="fu">aes</span>(<span class="at">x =</span> Variables, <span class="at">y =</span> SRC)) <span class="sc">+</span></span>
+<span id="cb8-50"><a href="#cb8-50" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(pos.jitter),</span>
+<span id="cb8-51"><a href="#cb8-51" tabindex="-1"></a>             <span class="at">col =</span> dataDf<span class="sc">$</span>color, <span class="at">alpha =</span> alph, <span class="at">size =</span> pt.size) <span class="sc">+</span></span>
+<span id="cb8-52"><a href="#cb8-52" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean), <span class="at">col =</span> dataDf<span class="sc">$</span>color,</span>
+<span id="cb8-53"><a href="#cb8-53" tabindex="-1"></a>             <span class="at">size =</span> mean.size, <span class="at">shape =</span> mean.shape) <span class="sc">+</span></span>
+<span id="cb8-54"><a href="#cb8-54" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>ci_boot_lower, <span class="at">ymax=</span>ci_boot_upper),</span>
+<span id="cb8-55"><a href="#cb8-55" tabindex="-1"></a>                <span class="at">width=</span>.<span class="dv">1</span>, <span class="at">col =</span> dataDf<span class="sc">$</span>color ) <span class="sc">+</span></span>
+<span id="cb8-56"><a href="#cb8-56" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">element_blank</span>(), <span class="at">x =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb8-57"><a href="#cb8-57" tabindex="-1"></a>  <span class="fu">theme_pubclean</span>() <span class="sc">+</span></span>
+<span id="cb8-58"><a href="#cb8-58" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Metric, <span class="at">ncol =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb8-59"><a href="#cb8-59" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>),</span>
+<span id="cb8-60"><a href="#cb8-60" tabindex="-1"></a>        <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">&quot;lines&quot;</span>))</span>
+<span id="cb8-61"><a href="#cb8-61" tabindex="-1"></a></span>
+<span id="cb8-62"><a href="#cb8-62" tabindex="-1"></a><span class="fu">tag_facet</span>(plot, <span class="at">x =</span> <span class="sc">-</span><span class="cn">Inf</span>, <span class="at">y =</span> <span class="cn">Inf</span>, <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.5</span>,</span>
+<span id="cb8-63"><a href="#cb8-63" tabindex="-1"></a>          <span class="at">open =</span> <span class="st">&quot;&quot;</span>, <span class="at">close =</span> <span class="st">&quot;)&quot;</span>, <span class="at">tag_pool =</span> LETTERS) <span class="sc">+</span> </span>
+<span id="cb8-64"><a href="#cb8-64" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb8-65"><a href="#cb8-65" tabindex="-1"></a>                                    <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>,</span>
+<span id="cb8-66"><a href="#cb8-66" tabindex="-1"></a>                                    <span class="at">vjust =</span> <span class="dv">1</span>,</span>
+<span id="cb8-67"><a href="#cb8-67" tabindex="-1"></a>                                    <span class="at">margin =</span> <span class="fu">margin</span>(<span class="fl">0.2</span>,<span class="dv">0</span>,<span class="fl">0.2</span>,<span class="dv">0</span>, <span class="st">&quot;cm&quot;</span>)))</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="../../Results/Analysis_figures/unified_sensitivity_analysis-1.png" alt="Unified sensitivity analysis for all metrics. Bars represent the 95% confidence interval with bootstrap for the mean." width="100%" />
+<p class="caption">
+Unified sensitivity analysis for all metrics. Bars represent the 95%
+confidence interval with bootstrap for the mean.
+</p>
+</div>
+</div>
+</div>
+<div id="pls-regression" class="section level2" number="5">
+<h2><span class="header-section-number">5</span> PLS Regression</h2>
+<div id="data-preparation" class="section level3" number="5.1">
+<h3><span class="header-section-number">5.1</span> Data Preparation</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Filter data for a specific metric</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>data_TL <span class="ot">&lt;-</span> <span class="fu">format_data</span>(data, <span class="st">&quot;Total length&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">Diff_TL =</span> Diff, <span class="at">.keep=</span><span class="st">&quot;unused&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>              <span class="fu">select</span>(<span class="sc">-</span>Value, <span class="sc">-</span>GS, <span class="sc">-</span>KComb)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>data_N50 <span class="ot">&lt;-</span> <span class="fu">format_data</span>(data, <span class="st">&quot;N50&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">Diff_N50 =</span> Diff, <span class="at">.keep=</span><span class="st">&quot;unused&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>              <span class="fu">select</span>(<span class="sc">-</span>Value, <span class="sc">-</span>GS, <span class="sc">-</span>KComb)</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>data_GC <span class="ot">&lt;-</span> <span class="fu">format_data</span>(data, <span class="st">&quot;GC (%)&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">Diff_GC =</span> Diff, <span class="at">.keep=</span><span class="st">&quot;unused&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>              <span class="fu">select</span>(<span class="sc">-</span>Value, <span class="sc">-</span>GS, <span class="sc">-</span>KComb)</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>data_contigs <span class="ot">&lt;-</span> <span class="fu">format_data</span>(data, <span class="st">&quot;# contigs&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">Diff_contigs =</span> Diff, <span class="at">.keep=</span><span class="st">&quot;unused&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>              <span class="fu">select</span>(<span class="sc">-</span>Value, <span class="sc">-</span>GS, <span class="sc">-</span>KComb)</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>pls_data <span class="ot">&lt;-</span> data_TL <span class="sc">%&gt;%</span> </span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>              <span class="fu">left_join</span>(data_N50, <span class="at">by =</span> <span class="fu">join_by</span>(Sample, Kmer1, Kmer2,</span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>                                               Kmer3, Kmer4)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>              <span class="fu">left_join</span>(data_GC, <span class="at">by =</span> <span class="fu">join_by</span>(Sample, Kmer1, Kmer2,</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>                                              Kmer3, Kmer4)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>              <span class="fu">left_join</span>(data_contigs, <span class="at">by =</span> <span class="fu">join_by</span>(Sample, Kmer1, Kmer2,</span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>                                                   Kmer3, Kmer4)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Kmer1, Kmer2, Kmer3, Kmer4), as.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">Std_Diff_TL =</span> Diff_TL<span class="sc">/</span><span class="fu">sd</span>(Diff_TL),</span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a>                     <span class="at">Std_Diff_N50 =</span> Diff_N50<span class="sc">/</span><span class="fu">sd</span>(Diff_N50),</span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>                     <span class="at">Std_Diff_GC =</span> Diff_GC<span class="sc">/</span><span class="fu">sd</span>(Diff_GC),</span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>                     <span class="at">Std_Diff_contigs =</span> Diff_contigs<span class="sc">/</span><span class="fu">sd</span>(Diff_contigs))</span></code></pre></div>
+</div>
+<div id="model-fitting" class="section level3" number="5.2">
+<h3><span class="header-section-number">5.2</span> Model Fitting</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Separate predictors and responses</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>predictors <span class="ot">&lt;-</span> pls_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(Kmer1, Kmer2, Kmer3, Kmer4)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>responses <span class="ot">&lt;-</span> pls_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(Diff_TL, Diff_N50, Diff_GC, Diff_contigs)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>responses <span class="ot">&lt;-</span> pls_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(Std_Diff_TL, Std_Diff_N50,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>                                 Std_Diff_GC, Std_Diff_contigs)</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># Fit the PLS model with cross-validation </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>pls_model <span class="ot">&lt;-</span> <span class="fu">plsr</span>(<span class="fu">as.matrix</span>(responses) <span class="sc">~</span> <span class="fu">as.matrix</span>(predictors),</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>                  <span class="at">data =</span> pls_data, <span class="at">validation =</span> <span class="st">&quot;LOO&quot;</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># Summary of the PLS model</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="fu">summary</span>(pls_model)</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co"># Loadings</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="fu">loadings</span>(pls_model)</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="fu">Yloadings</span>(pls_model)</span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="fu">loading.weights</span>(pls_model)</span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co"># Display the explained variance</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="fu">explvar</span>(pls_model)</span></code></pre></div>
+<pre><code>## Data:    X dimension: 6600 4 
+##  Y dimension: 6600 4
+## Fit method: kernelpls
+## Number of components considered: 4
+## 
+## VALIDATION: RMSEP
+## Cross-validated using 6600 leave-one-out segments.
+## 
+## Response: Std_Diff_TL 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9988   0.9989    0.999   0.9991
+## adjCV            1   0.9988   0.9989    0.999   0.9991
+## 
+## Response: Std_Diff_N50 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9946   0.9948   0.9948   0.9948
+## adjCV            1   0.9946   0.9948   0.9948   0.9948
+## 
+## Response: Std_Diff_GC 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9993   0.9995   0.9997   0.9997
+## adjCV            1   0.9993   0.9995   0.9997   0.9997
+## 
+## Response: Std_Diff_contigs 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9946   0.9947   0.9946   0.9946
+## adjCV            1   0.9946   0.9947   0.9946   0.9946
+## 
+## TRAINING: % variance explained
+##                   1 comps  2 comps  3 comps   4 comps
+## X                 22.9529  48.1977  74.5754  100.0000
+## Std_Diff_TL        0.3156   0.3156   0.3156    0.3156
+## Std_Diff_N50       1.1626   1.1771   1.1799    1.1799
+## Std_Diff_GC        0.1906   0.1908   0.1993    0.1994
+## Std_Diff_contigs   1.1835   1.2180   1.2198    1.2198
+## 
+## Loadings:
+##                            Comp 1 Comp 2 Comp 3 Comp 4
+## as.matrix(predictors)Kmer1  0.799 -0.177 -0.589       
+## as.matrix(predictors)Kmer2 -0.540  0.166 -0.807       
+## as.matrix(predictors)Kmer3                       0.999
+## as.matrix(predictors)Kmer4 -0.267 -0.970              
+## 
+##                Comp 1 Comp 2 Comp 3 Comp 4
+## SS loadings     1.001   1.00   1.00   1.00
+## Proportion Var  0.250   0.25   0.25   0.25
+## Cumulative Var  0.250   0.50   0.75   1.00
+## 
+## Loadings:
+##                  Comp 1 Comp 2 Comp 3 Comp 4
+## Std_Diff_TL                                 
+## Std_Diff_N50                                
+## Std_Diff_GC                                 
+## Std_Diff_contigs                            
+## 
+##                Comp 1 Comp 2 Comp 3 Comp 4
+## SS loadings     0.002      0      0      0
+## Proportion Var  0.000      0      0      0
+## Cumulative Var  0.000      0      0      0
+## 
+## Loadings:
+##                            Comp 1 Comp 2 Comp 3 Comp 4
+## as.matrix(predictors)Kmer1  0.789 -0.174 -0.589       
+## as.matrix(predictors)Kmer2 -0.565  0.170 -0.807       
+## as.matrix(predictors)Kmer3                       0.999
+## as.matrix(predictors)Kmer4 -0.240 -0.970              
+## 
+##                Comp 1 Comp 2 Comp 3 Comp 4
+## SS loadings      1.00   1.00   1.00   1.00
+## Proportion Var   0.25   0.25   0.25   0.25
+## Cumulative Var   0.25   0.50   0.75   1.00
+##   Comp 1   Comp 2   Comp 3   Comp 4 
+## 22.95286 25.24483 26.37772 25.42459</code></pre>
+<div id="standardized-metrics" class="section level4" number="5.2.1">
+<h4><span class="header-section-number">5.2.1</span> Standardized
+Metrics</h4>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Separate predictors and responses</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>predictors <span class="ot">&lt;-</span> pls_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(Kmer1, Kmer2, Kmer3, Kmer4)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>responses <span class="ot">&lt;-</span> pls_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(Std_Diff_TL, Std_Diff_N50,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>                                 Std_Diff_GC, Std_Diff_contigs)</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co"># Fit the PLS model with cross-validation</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>pls_model_std <span class="ot">&lt;-</span> <span class="fu">plsr</span>(<span class="fu">as.matrix</span>(responses) <span class="sc">~</span> <span class="fu">as.matrix</span>(predictors),</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>                      <span class="at">data =</span> pls_data, <span class="at">validation =</span> <span class="st">&quot;LOO&quot;</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co"># Summary of the PLS model</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="fu">summary</span>(pls_model_std)</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co"># Loadings</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="fu">loadings</span>(pls_model_std)</span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="fu">Yloadings</span>(pls_model_std)</span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="fu">loading.weights</span>(pls_model_std)</span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co"># Display the explained variance</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="fu">explvar</span>(pls_model_std)</span></code></pre></div>
+<pre><code>## Data:    X dimension: 6600 4 
+##  Y dimension: 6600 4
+## Fit method: kernelpls
+## Number of components considered: 4
+## 
+## VALIDATION: RMSEP
+## Cross-validated using 6600 leave-one-out segments.
+## 
+## Response: Std_Diff_TL 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9988   0.9989    0.999   0.9991
+## adjCV            1   0.9988   0.9989    0.999   0.9991
+## 
+## Response: Std_Diff_N50 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9946   0.9948   0.9948   0.9948
+## adjCV            1   0.9946   0.9948   0.9948   0.9948
+## 
+## Response: Std_Diff_GC 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9993   0.9995   0.9997   0.9997
+## adjCV            1   0.9993   0.9995   0.9997   0.9997
+## 
+## Response: Std_Diff_contigs 
+##        (Intercept)  1 comps  2 comps  3 comps  4 comps
+## CV               1   0.9946   0.9947   0.9946   0.9946
+## adjCV            1   0.9946   0.9947   0.9946   0.9946
+## 
+## TRAINING: % variance explained
+##                   1 comps  2 comps  3 comps   4 comps
+## X                 22.9529  48.1977  74.5754  100.0000
+## Std_Diff_TL        0.3156   0.3156   0.3156    0.3156
+## Std_Diff_N50       1.1626   1.1771   1.1799    1.1799
+## Std_Diff_GC        0.1906   0.1908   0.1993    0.1994
+## Std_Diff_contigs   1.1835   1.2180   1.2198    1.2198
+## 
+## Loadings:
+##                            Comp 1 Comp 2 Comp 3 Comp 4
+## as.matrix(predictors)Kmer1  0.799 -0.177 -0.589       
+## as.matrix(predictors)Kmer2 -0.540  0.166 -0.807       
+## as.matrix(predictors)Kmer3                       0.999
+## as.matrix(predictors)Kmer4 -0.267 -0.970              
+## 
+##                Comp 1 Comp 2 Comp 3 Comp 4
+## SS loadings     1.001   1.00   1.00   1.00
+## Proportion Var  0.250   0.25   0.25   0.25
+## Cumulative Var  0.250   0.50   0.75   1.00
+## 
+## Loadings:
+##                  Comp 1 Comp 2 Comp 3 Comp 4
+## Std_Diff_TL                                 
+## Std_Diff_N50                                
+## Std_Diff_GC                                 
+## Std_Diff_contigs                            
+## 
+##                Comp 1 Comp 2 Comp 3 Comp 4
+## SS loadings     0.002      0      0      0
+## Proportion Var  0.000      0      0      0
+## Cumulative Var  0.000      0      0      0
+## 
+## Loadings:
+##                            Comp 1 Comp 2 Comp 3 Comp 4
+## as.matrix(predictors)Kmer1  0.789 -0.174 -0.589       
+## as.matrix(predictors)Kmer2 -0.565  0.170 -0.807       
+## as.matrix(predictors)Kmer3                       0.999
+## as.matrix(predictors)Kmer4 -0.240 -0.970              
+## 
+##                Comp 1 Comp 2 Comp 3 Comp 4
+## SS loadings      1.00   1.00   1.00   1.00
+## Proportion Var   0.25   0.25   0.25   0.25
+## Cumulative Var   0.25   0.50   0.75   1.00
+##   Comp 1   Comp 2   Comp 3   Comp 4 
+## 22.95286 25.24483 26.37772 25.42459</code></pre>
+</div>
+</div>
+<div id="cross-validation-results" class="section level3" number="5.3">
+<h3><span class="header-section-number">5.3</span> Cross-validation
+Results</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Plot the cross-validation results to determine the optimal number of components</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">validationplot</span>(pls_model, <span class="at">val.type =</span> <span class="st">&quot;RMSEP&quot;</span>, <span class="at">legendpos =</span> <span class="st">&quot;bottomright&quot;</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>               <span class="at">intercept =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">&quot;Cross-validation Results&quot;</span>, <span class="at">nCols=</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="../../Results/Analysis_figures/cross_validation_results-1.png" alt="Cross-validation results for the PLS model. The plot shows the Root Mean Squared Error of Prediction (RMSEP) for different numbers of components." width="100%" />
+<p class="caption">
+Cross-validation results for the PLS model. The plot shows the Root Mean
+Squared Error of Prediction (RMSEP) for different numbers of components.
+</p>
+</div>
+</div>
+<div id="optimal-coefficients" class="section level3" number="5.4">
+<h3><span class="header-section-number">5.4</span> Optimal
+coefficients</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># Get the coefficients of the PLS model for the optimal number of components</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>optimal_components <span class="ot">&lt;-</span> <span class="dv">4</span> </span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>pls_coefficients <span class="ot">&lt;-</span> <span class="fu">coef</span>(pls_model, <span class="at">ncomp =</span> optimal_components)</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co"># Print the coefficients</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="fu">print</span>(pls_coefficients)</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co"># Plot the coefficients</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="fu">plot</span>(pls_coefficients, <span class="at">main =</span> <span class="st">&quot;PLS Coefficients&quot;</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="fu">plot</span>(pls_model, <span class="at">plottype =</span> <span class="st">&quot;coef&quot;</span>, <span class="at">ncomp=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>     <span class="at">legendpos =</span> <span class="st">&quot;bottomleft&quot;</span>, <span class="at">nCols=</span><span class="dv">2</span> )</span></code></pre></div>
+<pre><code>## , , 4 comps
+## 
+##                              Std_Diff_TL  Std_Diff_N50   Std_Diff_GC
+## as.matrix(predictors)Kmer1  0.0101382850 -0.0184773430 -9.145968e-03
+## as.matrix(predictors)Kmer2 -0.0074260894  0.0145194096  4.127577e-03
+## as.matrix(predictors)Kmer3 -0.0002079648  0.0003879909  5.636515e-05
+## as.matrix(predictors)Kmer4 -0.0032152612  0.0085773299  2.044518e-03
+##                            Std_Diff_contigs
+## as.matrix(predictors)Kmer1     0.0200944145
+## as.matrix(predictors)Kmer2    -0.0157185305
+## as.matrix(predictors)Kmer3    -0.0004133761
+## as.matrix(predictors)Kmer4    -0.0021368809</code></pre>
+<div class="figure" style="text-align: center">
+<img src="../../Results/Analysis_figures/optimal_coefficients-1.png" alt="Coefficients of the PLS model for the optimal number of components." width="100%" /><img src="../../Results/Analysis_figures/optimal_coefficients-2.png" alt="Coefficients of the PLS model for the optimal number of components." width="100%" />
+<p class="caption">
+Coefficients of the PLS model for the optimal number of components.
+</p>
+</div>
+</div>
+<div id="optimal-k-mer-combination" class="section level3" number="5.5">
+<h3><span class="header-section-number">5.5</span> Optimal k-mer
+combination</h3>
+<div id="direct-evaluation" class="section level4" number="5.5.1">
+<h4><span class="header-section-number">5.5.1</span> Direct
+evaluation</h4>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Define the error function</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>calculate_error <span class="ot">&lt;-</span> <span class="cf">function</span>(kmer_values) {</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="co"># Create a data frame with k-mer values for prediction</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>    <span class="at">Kmer1 =</span> kmer_values[<span class="dv">1</span>],</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>    <span class="at">Kmer2 =</span> kmer_values[<span class="dv">2</span>],</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>    <span class="at">Kmer3 =</span> kmer_values[<span class="dv">3</span>],</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>    <span class="at">Kmer4 =</span> kmer_values[<span class="dv">4</span>]</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>  )</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>  </span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>  <span class="co"># Predict deviations using the PLS model</span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>  optimal_components <span class="ot">&lt;-</span> <span class="dv">2</span>  <span class="co"># Set based on cross-validation results</span></span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>  predicted_deviation <span class="ot">&lt;-</span> <span class="fu">predict</span>(pls_model, <span class="at">newdata =</span> <span class="fu">as.matrix</span>(new_data), <span class="at">ncomp =</span> optimal_components)</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>  </span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>  <span class="co"># Calculate total error as the sum of absolute deviations</span></span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a>  total_error <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">abs</span>(predicted_deviation))</span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a>  </span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a>  <span class="fu">return</span>(total_error)</span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a>}</span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a><span class="co"># Set initial values for Kmer1, Kmer2, Kmer3, and Kmer4</span></span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a>initial_kmers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">33</span>, <span class="dv">55</span>, <span class="dv">77</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a><span class="co"># Define bounds for each k-mer (if needed)</span></span>
+<span id="cb17-25"><a href="#cb17-25" tabindex="-1"></a>lower_bounds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">27</span>, <span class="dv">49</span>, <span class="dv">71</span>)  <span class="co"># Minimum k-mer values</span></span>
+<span id="cb17-26"><a href="#cb17-26" tabindex="-1"></a>upper_bounds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">27</span>, <span class="dv">39</span>, <span class="dv">61</span>, <span class="dv">83</span>)  <span class="co"># Maximum k-mer values</span></span>
+<span id="cb17-27"><a href="#cb17-27" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" tabindex="-1"></a><span class="co"># Run optimization to minimize the error function</span></span>
+<span id="cb17-29"><a href="#cb17-29" tabindex="-1"></a>optimal_kmers <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb17-30"><a href="#cb17-30" tabindex="-1"></a>  <span class="at">par =</span> initial_kmers,</span>
+<span id="cb17-31"><a href="#cb17-31" tabindex="-1"></a>  <span class="at">fn =</span> calculate_error,</span>
+<span id="cb17-32"><a href="#cb17-32" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>,  <span class="co"># Allows for bounds on parameters</span></span>
+<span id="cb17-33"><a href="#cb17-33" tabindex="-1"></a>  <span class="at">lower =</span> lower_bounds,</span>
+<span id="cb17-34"><a href="#cb17-34" tabindex="-1"></a>  <span class="at">upper =</span> upper_bounds</span>
+<span id="cb17-35"><a href="#cb17-35" tabindex="-1"></a>)</span>
+<span id="cb17-36"><a href="#cb17-36" tabindex="-1"></a></span>
+<span id="cb17-37"><a href="#cb17-37" tabindex="-1"></a><span class="co"># Print the optimal k-mer combination</span></span>
+<span id="cb17-38"><a href="#cb17-38" tabindex="-1"></a>optimal_kmers<span class="sc">$</span>par</span></code></pre></div>
+<pre><code>## [1] 27 27 49 71</code></pre>
+</div>
+<div id="using-a-grid-search" class="section level4" number="5.5.2">
+<h4><span class="header-section-number">5.5.2</span> Using a grid
+search</h4>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># Step 1: Generate all possible k-mer combinations</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>Kmer1_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">17</span>, <span class="dv">21</span>, <span class="dv">25</span>, <span class="dv">27</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>Kmer2_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">27</span>, <span class="dv">29</span>, <span class="dv">33</span>, <span class="dv">37</span>, <span class="dv">39</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>Kmer3_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">49</span>, <span class="dv">51</span>, <span class="dv">55</span>, <span class="dv">59</span>, <span class="dv">61</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>Kmer4_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">71</span>, <span class="dv">73</span>, <span class="dv">77</span>, <span class="dv">81</span>, <span class="dv">83</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>kmer_combinations <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>  <span class="at">Kmer1 =</span> Kmer1_values,</span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>  <span class="at">Kmer2 =</span> Kmer2_values,</span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>  <span class="at">Kmer3 =</span> Kmer3_values,</span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>  <span class="at">Kmer4 =</span> Kmer4_values</span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>)</span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a><span class="do">### Step 2: Predict Assembly Metrics</span></span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>optimal_components <span class="ot">&lt;-</span> <span class="dv">2</span>  <span class="co"># Set based on cross-validation results</span></span>
+<span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a><span class="co"># Predict assembly metrics for all k-mer combinations</span></span>
+<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a>predicted_metrics <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb19-19"><a href="#cb19-19" tabindex="-1"></a>  pls_model,</span>
+<span id="cb19-20"><a href="#cb19-20" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">as.matrix</span>(kmer_combinations),</span>
+<span id="cb19-21"><a href="#cb19-21" tabindex="-1"></a>  <span class="at">ncomp =</span> optimal_components</span>
+<span id="cb19-22"><a href="#cb19-22" tabindex="-1"></a>)</span>
+<span id="cb19-23"><a href="#cb19-23" tabindex="-1"></a></span>
+<span id="cb19-24"><a href="#cb19-24" tabindex="-1"></a><span class="co"># Convert predicted metrics to a data frame</span></span>
+<span id="cb19-25"><a href="#cb19-25" tabindex="-1"></a>predicted_metrics_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(predicted_metrics)</span>
+<span id="cb19-26"><a href="#cb19-26" tabindex="-1"></a></span>
+<span id="cb19-27"><a href="#cb19-27" tabindex="-1"></a><span class="co"># Name the columns appropriately</span></span>
+<span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a><span class="fu">colnames</span>(predicted_metrics_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Pred_Diff_TL&quot;</span>, <span class="st">&quot;Pred_Diff_N50&quot;</span>, <span class="st">&quot;Pred_Diff_GC&quot;</span>, <span class="st">&quot;Pred_Diff_contigs&quot;</span>)</span>
+<span id="cb19-29"><a href="#cb19-29" tabindex="-1"></a></span>
+<span id="cb19-30"><a href="#cb19-30" tabindex="-1"></a><span class="co"># Combine the k-mer combinations with the predicted metrics</span></span>
+<span id="cb19-31"><a href="#cb19-31" tabindex="-1"></a>results_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(kmer_combinations, predicted_metrics_df)</span>
+<span id="cb19-32"><a href="#cb19-32" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" tabindex="-1"></a><span class="do">### Step 3: Define the Objective Function</span></span>
+<span id="cb19-34"><a href="#cb19-34" tabindex="-1"></a></span>
+<span id="cb19-35"><a href="#cb19-35" tabindex="-1"></a><span class="co"># Calculate standard deviations from training data</span></span>
+<span id="cb19-36"><a href="#cb19-36" tabindex="-1"></a>sd_TL <span class="ot">&lt;-</span> <span class="fu">sd</span>(pls_data<span class="sc">$</span>Diff_TL)</span>
+<span id="cb19-37"><a href="#cb19-37" tabindex="-1"></a>sd_N50 <span class="ot">&lt;-</span> <span class="fu">sd</span>(pls_data<span class="sc">$</span>Diff_N50)</span>
+<span id="cb19-38"><a href="#cb19-38" tabindex="-1"></a>sd_contigs <span class="ot">&lt;-</span> <span class="fu">sd</span>(pls_data<span class="sc">$</span>Diff_contigs)</span>
+<span id="cb19-39"><a href="#cb19-39" tabindex="-1"></a>sd_GC <span class="ot">&lt;-</span> <span class="fu">sd</span>(pls_data<span class="sc">$</span>Diff_GC)</span>
+<span id="cb19-40"><a href="#cb19-40" tabindex="-1"></a></span>
+<span id="cb19-41"><a href="#cb19-41" tabindex="-1"></a><span class="co"># Standardize the predicted deviations</span></span>
+<span id="cb19-42"><a href="#cb19-42" tabindex="-1"></a>results_df<span class="sc">$</span>Std_Pred_Diff_TL <span class="ot">&lt;-</span> results_df<span class="sc">$</span>Pred_Diff_TL <span class="sc">/</span> sd_TL</span>
+<span id="cb19-43"><a href="#cb19-43" tabindex="-1"></a>results_df<span class="sc">$</span>Std_Pred_Diff_N50 <span class="ot">&lt;-</span> results_df<span class="sc">$</span>Pred_Diff_N50 <span class="sc">/</span> sd_N50</span>
+<span id="cb19-44"><a href="#cb19-44" tabindex="-1"></a>results_df<span class="sc">$</span>Std_Pred_Diff_contigs <span class="ot">&lt;-</span> results_df<span class="sc">$</span>Pred_Diff_contigs <span class="sc">/</span> sd_contigs</span>
+<span id="cb19-45"><a href="#cb19-45" tabindex="-1"></a>results_df<span class="sc">$</span>Std_Pred_Diff_GC <span class="ot">&lt;-</span> results_df<span class="sc">$</span>Pred_Diff_GC <span class="sc">/</span> sd_GC</span>
+<span id="cb19-46"><a href="#cb19-46" tabindex="-1"></a></span>
+<span id="cb19-47"><a href="#cb19-47" tabindex="-1"></a><span class="co"># Define weights based on priorities</span></span>
+<span id="cb19-48"><a href="#cb19-48" tabindex="-1"></a>w_N50 <span class="ot">&lt;-</span> <span class="dv">1</span>      <span class="co"># Maximize N50</span></span>
+<span id="cb19-49"><a href="#cb19-49" tabindex="-1"></a>w_contigs <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># Maximize the number of contigs</span></span>
+<span id="cb19-50"><a href="#cb19-50" tabindex="-1"></a>w_TL <span class="ot">&lt;-</span> <span class="dv">1</span>       <span class="co"># Maximize total length</span></span>
+<span id="cb19-51"><a href="#cb19-51" tabindex="-1"></a>w_GC <span class="ot">&lt;-</span> <span class="dv">0</span>       <span class="co"># Not prioritizing GC content</span></span>
+<span id="cb19-52"><a href="#cb19-52" tabindex="-1"></a></span>
+<span id="cb19-53"><a href="#cb19-53" tabindex="-1"></a><span class="co"># Calculate the score</span></span>
+<span id="cb19-54"><a href="#cb19-54" tabindex="-1"></a>results_df<span class="sc">$</span>Score <span class="ot">&lt;-</span> (w_N50 <span class="sc">*</span> results_df<span class="sc">$</span>Std_Pred_Diff_N50) <span class="sc">+</span></span>
+<span id="cb19-55"><a href="#cb19-55" tabindex="-1"></a>                    (w_contigs <span class="sc">*</span> results_df<span class="sc">$</span>Std_Pred_Diff_contigs) <span class="sc">+</span></span>
+<span id="cb19-56"><a href="#cb19-56" tabindex="-1"></a>                    (w_TL <span class="sc">*</span> results_df<span class="sc">$</span>Std_Pred_Diff_TL) <span class="sc">+</span></span>
+<span id="cb19-57"><a href="#cb19-57" tabindex="-1"></a>                    (w_GC <span class="sc">*</span> results_df<span class="sc">$</span>Std_Pred_Diff_GC)</span>
+<span id="cb19-58"><a href="#cb19-58" tabindex="-1"></a></span>
+<span id="cb19-59"><a href="#cb19-59" tabindex="-1"></a><span class="do">### Step 4: Select the Optimal K-mer Combination</span></span>
+<span id="cb19-60"><a href="#cb19-60" tabindex="-1"></a></span>
+<span id="cb19-61"><a href="#cb19-61" tabindex="-1"></a><span class="co"># Find the combination with the maximum score</span></span>
+<span id="cb19-62"><a href="#cb19-62" tabindex="-1"></a>best_combination <span class="ot">&lt;-</span> results_df[<span class="fu">which.max</span>(results_df<span class="sc">$</span>Score), ]</span>
+<span id="cb19-63"><a href="#cb19-63" tabindex="-1"></a></span>
+<span id="cb19-64"><a href="#cb19-64" tabindex="-1"></a><span class="co"># Print the best combination and its predicted metrics</span></span>
+<span id="cb19-65"><a href="#cb19-65" tabindex="-1"></a><span class="fu">print</span>(best_combination)</span></code></pre></div>
+<pre><code>##     Kmer1 Kmer2 Kmer3 Kmer4 Pred_Diff_TL Pred_Diff_N50 Pred_Diff_GC
+## 621    15    39    61    83    -2.773896     0.5487886    0.5216348
+##     Pred_Diff_contigs Std_Pred_Diff_TL Std_Pred_Diff_N50 Std_Pred_Diff_contigs
+## 621         -2.531692    -5.863957e-08      0.0001072036         -9.373218e-05
+##     Std_Pred_Diff_GC        Score
+## 621         1.079227 1.341275e-05</code></pre>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
