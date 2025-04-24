@@ -6,7 +6,7 @@ message("Running summarize_stats.R")
 # Load necessary libraries
 library(tidyverse)
 
-ROOT_DIR <- "/mmfs1/scratch/gas0042/Pratical_data"
+ROOT_DIR <- "/mmfs1/scratch/gas0042/PLPA_project"
 
 # Define sample numbers
 samples <- seq(5, 15, 1)

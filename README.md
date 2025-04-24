@@ -50,7 +50,8 @@ The only data included in this repository is the summary of all metaquast result
 
 ### Prerequisites
 
-- **Operating System**: Unix-like system (Linux or macOS)
+All softwares were installed in the cluster using `conda` environments, and the scripts are designed to be run in a Unix-like environment. The following software and data are required to run the analysis:
+
 - **Software Requirements**:
     - **SPAdes**: Version 4.0.0 or higher
     - **metaQUAST**: Version 5.2.0
@@ -88,10 +89,6 @@ The only data included in this repository is the summary of all metaquast result
     - To run metaQUAST on the assemblies:
         ```bash
         ./runMe_metaQuast.sh
-        ```
-    - For a reduced metaQUAST analysis (faster, fewer metrics):
-        ```bash
-        ./runMe_metaQuast_reduced.sh
         ```
     - To include gold standard references in metaQUAST:
         ```bash

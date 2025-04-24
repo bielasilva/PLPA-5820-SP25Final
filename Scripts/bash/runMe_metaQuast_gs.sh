@@ -4,7 +4,7 @@
 source /mmfs1/home/gas0042/miniforge3/bin/activate Quast
 
 # Define root directory
-ROOT_DIR="/mmfs1/scratch/gas0042/Pratical_data"
+ROOT_DIR="/mmfs1/scratch/gas0042/PLPA_project"
 
 # Define sample numbers
 samples=($(seq 5 1 15))

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.22)  22 APR 2025 15:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.22)  24 APR 2025 15:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -562,62 +562,62 @@ Underfull \vbox (badness 10000) detected at line 286
 
 
 [3]
-<../../Results/Analysis_figures/sensitivity_total_length-1.png, id=36, 4015.0pt
- x 2007.5pt>
+<../../Results/Analysis_figures/sensitivity_total_length-1.png, id=36, 8030.0pt
+ x 4015.0pt>
 File: ../../Results/Analysis_figures/sensitivity_total_length-1.png Graphic fil
 e (type png)
 <use ../../Results/Analysis_figures/sensitivity_total_length-1.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/sensitivity_total_lengt
 h-1.png  used on input line 331.
-(pdftex.def)             Requested size: 469.71024pt x 234.85512pt.
+(pdftex.def)             Requested size: 469.64897pt x 234.82448pt.
 
 
 [4]
-<../../Results/Analysis_figures/sensitivity_N50-1.png, id=44, 4015.0pt x 2007.5
+<../../Results/Analysis_figures/sensitivity_N50-1.png, id=44, 8030.0pt x 4015.0
 pt>
 File: ../../Results/Analysis_figures/sensitivity_N50-1.png Graphic file (type p
 ng)
 <use ../../Results/Analysis_figures/sensitivity_N50-1.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/sensitivity_N50-1.png  
 used on input line 358.
-(pdftex.def)             Requested size: 469.71024pt x 234.85512pt.
-<../../Results/Analysis_figures/sensitivity_gc_content-1.png, id=45, 4015.0pt x
- 2007.5pt>
+(pdftex.def)             Requested size: 469.64897pt x 234.82448pt.
+<../../Results/Analysis_figures/sensitivity_gc_content-1.png, id=45, 8030.0pt x
+ 4015.0pt>
 File: ../../Results/Analysis_figures/sensitivity_gc_content-1.png Graphic file 
 (type png)
 <use ../../Results/Analysis_figures/sensitivity_gc_content-1.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/sensitivity_gc_content-
 1.png  used on input line 385.
-(pdftex.def)             Requested size: 469.71024pt x 234.85512pt.
+(pdftex.def)             Requested size: 469.64897pt x 234.82448pt.
 
 
 [5 <../../Results/Analysis_figures/sensitivity_total_length-1.png>]
 
 [6 <../../Results/Analysis_figures/sensitivity_N50-1.png> <../../Results/Analys
 is_figures/sensitivity_gc_content-1.png>]
-<../../Results/Analysis_figures/sensitivity_contigs-1.png, id=62, 4015.0pt x 20
-07.5pt>
+<../../Results/Analysis_figures/sensitivity_contigs-1.png, id=62, 8030.0pt x 40
+15.0pt>
 File: ../../Results/Analysis_figures/sensitivity_contigs-1.png Graphic file (ty
 pe png)
 <use ../../Results/Analysis_figures/sensitivity_contigs-1.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/sensitivity_contigs-1.p
 ng  used on input line 412.
-(pdftex.def)             Requested size: 469.71024pt x 234.85512pt.
+(pdftex.def)             Requested size: 469.64897pt x 234.82448pt.
 
-Overfull \vbox (0.33456pt too high) detected at line 492
+Overfull \vbox (0.30392pt too high) detected at line 492
  []
 
 
 
 [7 <../../Results/Analysis_figures/sensitivity_contigs-1.png>]
-<../../Results/Analysis_figures/unified_sensitivity_analysis-1.png, id=72, 4015
-.0pt x 2007.5pt>
+<../../Results/Analysis_figures/unified_sensitivity_analysis-1.png, id=72, 8030
+.0pt x 4015.0pt>
 File: ../../Results/Analysis_figures/unified_sensitivity_analysis-1.png Graphic
  file (type png)
 <use ../../Results/Analysis_figures/unified_sensitivity_analysis-1.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/unified_sensitivity_ana
 lysis-1.png  used on input line 496.
-(pdftex.def)             Requested size: 469.71024pt x 234.85512pt.
+(pdftex.def)             Requested size: 469.64897pt x 234.82448pt.
 
 
 [8]
@@ -629,37 +629,37 @@ lysis-1.png  used on input line 496.
 [11]
 
 [12]
-<../../Results/Analysis_figures/cross_validation_results-1.png, id=98, 4015.0pt
- x 3011.25pt>
+<../../Results/Analysis_figures/cross_validation_results-1.png, id=98, 8030.0pt
+ x 6022.5pt>
 File: ../../Results/Analysis_figures/cross_validation_results-1.png Graphic fil
 e (type png)
 <use ../../Results/Analysis_figures/cross_validation_results-1.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/cross_validation_result
 s-1.png  used on input line 759.
-(pdftex.def)             Requested size: 469.71024pt x 352.28267pt.
+(pdftex.def)             Requested size: 469.64897pt x 352.23672pt.
 
 
 [13]
 
 [14 <../../Results/Analysis_figures/cross_validation_results-1.png>]
-<../../Results/Analysis_figures/optimal_coefficients-1.png, id=112, 4015.0pt x 
-3212.0pt>
+<../../Results/Analysis_figures/optimal_coefficients-1.png, id=112, 8030.0pt x 
+6424.0pt>
 File: ../../Results/Analysis_figures/optimal_coefficients-1.png Graphic file (t
 ype png)
 <use ../../Results/Analysis_figures/optimal_coefficients-1.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/optimal_coefficients-1.
 png  used on input line 802.
-(pdftex.def)             Requested size: 469.71024pt x 375.76819pt.
-<../../Results/Analysis_figures/optimal_coefficients-2.png, id=113, 4015.0pt x 
-3212.0pt>
+(pdftex.def)             Requested size: 469.64897pt x 375.71918pt.
+<../../Results/Analysis_figures/optimal_coefficients-2.png, id=113, 8030.0pt x 
+6424.0pt>
 File: ../../Results/Analysis_figures/optimal_coefficients-2.png Graphic file (t
 ype png)
 <use ../../Results/Analysis_figures/optimal_coefficients-2.png>
 Package pdftex.def Info: ../../Results/Analysis_figures/optimal_coefficients-2.
 png  used on input line 802.
-(pdftex.def)             Requested size: 469.71024pt x 375.76819pt.
+(pdftex.def)             Requested size: 469.64897pt x 375.71918pt.
 
-LaTeX Warning: Float too large for page by 126.0508pt on input line 807.
+LaTeX Warning: Float too large for page by 125.95277pt on input line 807.
 
 
 
@@ -697,7 +697,7 @@ xlive/2025basic/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/
 asic/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></usr/local/texlive/2025basic
 /texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2025basic/texm
 f-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on Analysis.pdf (18 pages, 2118602 bytes).
+Output written on Analysis.pdf (18 pages, 4679927 bytes).
 PDF statistics:
  207 PDF objects out of 1000 (max. 8388607)
  151 compressed objects within 2 object streams

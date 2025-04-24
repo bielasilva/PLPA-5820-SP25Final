@@ -1,8 +1,6 @@
 ---
 title: "Metagenomics K-mer Testing"
 output:
-  pdf_document:
-    toc: true
   html_document:
     highlight: tango
     theme: flatly
@@ -14,6 +12,8 @@ output:
     fig_caption: true
     df_print: paged
     self_contained: false
+  pdf_document:
+    toc: true
 ---
 
 ## Import Libraries

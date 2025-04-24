@@ -4,7 +4,7 @@
 source /mmfs1/home/gas0042/miniforge3/bin/activate Quast
 
 # Define root directory
-ROOT_DIR="/mmfs1/scratch/gas0042/Pratical_data"
+ROOT_DIR="/mmfs1/scratch/gas0042/PLPA_project"
 
 # Define misc functions
 echo_overwrite() { echo -e "\r\033[1A\033[0K$@"; }

@@ -9,7 +9,7 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=gas0042@auburn.edu
 
-ROOT_DIR="/mmfs1/scratch/gas0042/Pratical_data"
+ROOT_DIR="/mmfs1/scratch/gas0042/PLPA_project"
 
 # Download genomes
 
